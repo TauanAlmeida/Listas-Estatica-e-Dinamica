@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <conio.h>
-#include "lista.h"
+#include "lista-estatica.h"
 
 int main(){
-	int v,i,elem;
+	int v,i,elem, m, n;
 	char opcao;
 	LISTA l;
 	cria_lista (&l);
@@ -12,7 +12,8 @@ int main(){
 	for (i=1;i < 6;i++){
 		printf ("valor para a lista: ");
 		scanf ("%d", &v);
-		ins (&l, v, i);
+	//	ins (&l, v, i);  //insere a lista normal
+	insere_ordenado (&l, v); //insere a lista ordenada
 	}
 	system("cls");
 	while(opcao != 's' && 'S'){
@@ -23,7 +24,10 @@ int main(){
 		printf("(D) Retirar Elemento.\n");
 		printf("(E) Ordenar Lista.\n");
 		printf("(F) Consulta por valor.\n");
-		printf("(G) Imprimir Lista.\n");
+		printf("(G) Inserir Lista(M..N).\n");
+		printf("(H) Imprimir Lista.\n");
+		printf("(I) Remocao por valor.\n");
+
 		fflush(stdin);
         opcao= getch(); 
         switch (opcao){
@@ -84,7 +88,28 @@ int main(){
 		case 'g':
 		case 'G':
 			system("cls");
+			printf("Digite um numero: ");
+			scanf ("%d", &m);
+			scanf ("%d", &n);
+			gera_lista(&l, m, n);
+			system("pause");
+			system("cls");
+		break;
+		
+		case 'h':
+		case 'H':
+			system("cls");
 			imprimi(&l);
+			system("pause");
+			system("cls");
+		break;
+		
+		case 'i':
+		case 'I':
+			system("cls");
+			printf("Digite um numero: ");
+			scanf ("%d", &elem);
+			remove_com_base_no_valor (&l, elem);
 			system("pause");
 			system("cls");
 		break;
@@ -104,6 +129,20 @@ int main(){
 void Sair(){
 	exit(1);
 }
+
+void gera_lista(LISTA *l, int m, int n){
+	int i;
+	if (l->N == MAX){
+		printf ("\nERRO! Estouro na lista.\n");
+		exit (1);
+	}
+	for (i=0;m<=n && l->N != MAX;m++){
+		l->val[i]=m;
+		l->N++;
+		i++;
+	}
+}
+
 
 int ordenar_lista (LISTA *l){
 	int i,j, ord=0, aux;
@@ -134,8 +173,8 @@ int eh_ord (LISTA *l){
 	for(i=0;i<l->N;i++){
 		if (l->val[i]<l->val[i+1]){
 			ord++;
-			if (ord == 4){
-				printf ("eh ordenada!\n");
+			if (ord == l->N-1){
+				printf ("eh ordenada! %d\n", l->N-1);
 				l->order=1;
 			return 1;
 			}
@@ -157,6 +196,43 @@ int tam (LISTA *l){
 	printf ("o tamanho da lista eh: %d\n", l->N);
 return (l->N);
 }
+
+void insere_ordenado (LISTA *l, int v){
+int i,aux;
+static int j=1;
+	if (l->N == MAX){
+		printf ("\nERRO! Estouro na lista.\n");
+		exit (1);
+	}
+	if (j < 1 || j > l->N+1){
+		printf ("\nERRO! Posição invalida para insercao.\n");
+		exit (2);
+	}
+	l->val[j-1]=v;
+		for (i=0;i<l->N;i++){
+			if (l->val[j-1] < l->val[i]){
+				aux = l->val[i]; 
+				l->val[i] = l->val[j-1];
+				l->val[j-1] = aux;
+			}	
+		}
+	l->N++;
+	j++;
+}
+
+void remove_com_base_no_valor (LISTA *l, int v){
+	int i, valor_encontrado = 0;
+	for (i=0;i<l->N;i++){
+		if (l->val[i] == v){
+			valor_encontrado = 1;
+		}
+		if (valor_encontrado == 1 && i < l->N-1){
+			l->val[i] = l->val[i+1];
+		}
+	}
+	l->N--;
+}
+
 
 void ins (LISTA *l, int v, int k){
 int i;
