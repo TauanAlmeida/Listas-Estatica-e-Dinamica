@@ -17,27 +17,25 @@ int main(){
 //insere_ordenado(&li, 4);
 
 	imprimi_lista(&li);
-	remove_com_base_no_valor(&li, 2);
+	remove_com_base_no_valor(&li, 1);
 	imprimi_lista(&li);
 //pertence(&li, 4);
 //	eh_ordenada(&li);
 }
 
 void remove_com_base_no_valor(LISTA_ENC *pl, int valor){
-	NODO *aux;
-	NODO *ant;
-	int cont=0;
-	aux = (NODO *) malloc (sizeof(NODO));
-//	for (aux=*pl;aux->inf!=valor;aux=aux->next)ant=aux->next;
-	for (aux=*pl;aux->inf!=valor;aux=aux->next){
-		cont++;
-		ant=aux;
-	}
-	if (cont==0){
-		free()
-	}
-	ant->next = aux->next;
-//	return *pl;
+	NODO *aux= *pl;
+	NODO *ant = NULL;
+	while (aux != NULL && aux->inf != valor) {
+	 ant = aux;
+	 aux = aux->next;
+	 }
+	 if (ant == NULL){ /* retira elemento do inicio */
+	 *pl = aux->next; 
+	 }else{ /* retira elemento do meio da lista */
+	 ant->next = aux->next; 
+	 }
+	 free(aux);
 }
 
 
